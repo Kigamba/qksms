@@ -131,7 +131,7 @@ class MainViewModel @Inject constructor(
         super.bindView(view)
 
         when {
-            !permissionManager.isDefaultSms() -> view.requestDefaultSms()
+            //!permissionManager.isDefaultSms() -> view.requestDefaultSms()
             !permissionManager.hasReadSms() || !permissionManager.hasContacts() -> view.requestPermissions()
         }
 
