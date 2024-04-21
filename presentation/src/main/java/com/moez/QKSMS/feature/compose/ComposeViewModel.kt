@@ -76,6 +76,7 @@ import javax.inject.Named
 class ComposeViewModel @Inject constructor(
     @Named("query") private val query: String,
     @Named("threadId") private val threadId: Long,
+    @Named("messageId") private val messageId: Long,
     @Named("addresses") private val addresses: List<String>,
     @Named("text") private val sharedText: String,
     @Named("attachments") private val sharedAttachments: Attachments,
@@ -728,6 +729,14 @@ class ComposeViewModel @Inject constructor(
                 .autoDisposable(view.scope())
                 .subscribe()
 
+        // If message Id was set, then scroll to it
+        view.onRenderIntent
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(view.scope())
+                .subscribe {
+                    if (messageId > 0)
+                        view.scrollToMessage(messageId)
+                }
     }
 
     private fun getVCard(contactData: Uri): String? {

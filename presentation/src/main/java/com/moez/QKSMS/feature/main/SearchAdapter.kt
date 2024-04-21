@@ -52,7 +52,8 @@ class SearchAdapter @Inject constructor(
         return QkViewHolder(view).apply {
             view.setOnClickListener {
                 val result = getItem(adapterPosition)
-                navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 })
+                //navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 }, result.conversation.lastMessage?.id)
+                navigator.showConversation(result.conversation.id, result.query, result.conversation.lastMessage?.id)
             }
         }
     }
@@ -81,7 +82,22 @@ class SearchAdapter @Inject constructor(
                 holder.date.text = dateFormatter.getConversationTimestamp(result.conversation.date)
                 holder.snippet.text = when (result.conversation.me) {
                     true -> context.getString(R.string.main_sender_you, result.conversation.snippet)
-                    false -> result.conversation.snippet
+                    false -> {
+                        if (result.conversation.snippet != null && result.conversation.snippet!!.contains(query, ignoreCase = true)) {
+                            val snippetText = result.conversation.snippet!!
+                            val formattedSnippetText = SpannableString(snippetText)
+                            var queryIndex = formattedSnippetText.indexOf(query, ignoreCase = true)
+
+                            while (queryIndex >= 0) {
+                                formattedSnippetText.setSpan(BackgroundColorSpan(highlightColor), queryIndex, queryIndex + query.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                queryIndex = formattedSnippetText.indexOf(query, queryIndex + query.length, ignoreCase = true)
+                            }
+
+                            formattedSnippetText
+                        } else {
+                            result.conversation.snippet
+                        }
+                    }
                 }
             }
 

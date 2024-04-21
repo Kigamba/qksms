@@ -151,10 +151,10 @@ class ConversationRepositoryImpl @Inject constructor(
                 .endGroup()
                 .findAll())
                 .asSequence()
-                .groupBy { message -> message.threadId }
-                .filter { (threadId, _) -> conversations.firstOrNull { it.id == threadId } != null }
-                .map { (threadId, messages) -> Pair(conversations.first { it.id == threadId }, messages.size) }
-                .map { (conversation, messages) -> SearchResult(normalizedQuery, conversation, messages) }
+                //.groupBy { message -> message.threadId }
+                //.filter { message -> conversations.firstOrNull { it.id == threadId } != null }
+                //.map { (threadId, messages) -> Pair(conversations.first { it.id == threadId }, messages.size) }
+                .map { msg -> SearchResult(normalizedQuery, conversations.first { it.id == msg.threadId }.createCopy().apply { lastMessage = msg }, 0) }
                 .sortedByDescending { result -> result.messages }
                 .toList()
 
@@ -163,6 +163,10 @@ class ConversationRepositoryImpl @Inject constructor(
         return conversations
                 .filter { conversation -> conversationFilter.filter(conversation, normalizedQuery) }
                 .map { conversation -> SearchResult(normalizedQuery, conversation, 0) } + messagesByConversation
+    }
+
+    fun Conversation.createCopy() : Conversation {
+        return Conversation(id = id, archived = archived, blocked = blocked, pinned = pinned, recipients = recipients, lastMessage = lastMessage, draft = draft, blockingClient = blockingClient, blockReason = blockReason, name = name)
     }
 
     override fun getBlockedConversations(): RealmResults<Conversation> {

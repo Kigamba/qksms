@@ -30,6 +30,7 @@ import com.moez.QKSMS.common.util.CrashlyticsTree
 import com.moez.QKSMS.common.util.FileLoggingTree
 import com.moez.QKSMS.injection.AppComponentManager
 import com.moez.QKSMS.injection.appComponent
+import com.moez.QKSMS.interactor.SyncMessages
 import com.moez.QKSMS.manager.AnalyticsManager
 import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.manager.ReferralManager
@@ -69,6 +70,7 @@ class QKApplication : Application(), HasActivityInjector, HasBroadcastReceiverIn
     @Inject lateinit var nightModeManager: NightModeManager
     @Inject lateinit var realmMigration: QkRealmMigration
     @Inject lateinit var referralManager: ReferralManager
+    @Inject lateinit var syncMessages: SyncMessages
 
     override fun onCreate() {
         super.onCreate()
@@ -106,6 +108,9 @@ class QKApplication : Application(), HasActivityInjector, HasBroadcastReceiverIn
         RxDogTag.builder()
                 .configureWith(AutoDisposeConfigurer::configure)
                 .install()
+
+        syncMessages.execute(Unit)
+        Timber.d("Started syncing messages")
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {
