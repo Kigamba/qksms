@@ -55,6 +55,7 @@ interface ComposeView : QkView<ComposeState> {
     val sendIntent: Observable<Unit>
     val viewQksmsPlusIntent: Subject<Unit>
     val backPressedIntent: Observable<Unit>
+    val onRenderIntent: Subject<Unit>
 
     fun clearSelection()
     fun showDetails(details: String)

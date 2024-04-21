@@ -52,7 +52,8 @@ class SearchAdapter @Inject constructor(
         return QkViewHolder(view).apply {
             view.setOnClickListener {
                 val result = getItem(adapterPosition)
-                navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 })
+                //navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 }, result.conversation.lastMessage?.id)
+                navigator.showConversation(result.conversation.id, result.query, result.conversation.lastMessage?.id)
             }
         }
     }

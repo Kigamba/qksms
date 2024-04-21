@@ -44,6 +44,10 @@ class ComposeActivityModule {
     fun provideThreadId(activity: ComposeActivity): Long = activity.intent.extras?.getLong("threadId") ?: 0L
 
     @Provides
+    @Named("messageId")
+    fun provideMessageId(activity: ComposeActivity): Long = activity.intent.extras?.getLong("messageId") ?: 0L
+
+    @Provides
     @Named("addresses")
     fun provideAddresses(activity: ComposeActivity): List<String> {
         return activity.intent
