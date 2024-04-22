@@ -325,6 +325,8 @@ class MainActivity : QkThemedActivity(), MainView {
                 snackbarButton?.setText(R.string.main_permission_allow)
             }
         }
+
+        //startActivity(Intent(this, MainActivity2::class.java))
     }
 
     override fun onResume() {
